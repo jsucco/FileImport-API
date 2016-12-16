@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Model MCS.Models.SourceViewModel; 
+
+<div class="jumbotron">
+    <h2 style="position:absolute;">Sources</h2> 
+    <div style="position:relative; float:right; margin-right:110px; margin-left:40px; top:14px;">
+        @Html.ActionLink("DownLoad App", "Download")
+    </div>
+    <div id="tablediv" style="width:90%; position:relative; top:80px;">
+        <table id="sourceTable"></table>
+        <div id="sourcePager"></div>
+    </div>
+</div>
+<link href="http://cdn.wijmo.com/themes/arctic/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+
+
+<!--Wijmo Widgets CSS-->
+<link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20141.34.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+<script src="~/Scripts/grid.locale-en.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery.jqGrid.min.js" type="text/javascript"></script>
+<style>
+    .ui-jqgrid .ui-jqgrid-htable th div {
+        overflow: hidden;
+        position: relative;
+        height: 37px;
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+    .ui-jqgrid tr.jqgrow {
+        outline-style: none;
+        height: 45px;
+        font-size: 15px;
+    }
+</style>
+<script type="text/javascript">
+    var PageCnter = 1; 
+    var paging = false; 
+    $(function () {
+        var Data = @Html.Raw(Json.Encode(Model.Sources));
+        mcs.Init();
+        //mcs.load(Data);
+
+    });
+
+    var mcs = {
+        Init: function () {
+
+            $("#sourceTable").jqGrid({
+                datatype: "json",
+                url: "/Home/getSources",
+                editurl: "/Home/editSources",
+                colNames: ["ac","Id", "MachineName", "Name", "IPAddress", "Active"],
+                colModel: [
+                    { name: 'delete', index: 'delete', hidden: false, width: 90, formatter: 'actions', formatoptions : { onError:function(rowid, jqXHR, textStatus) {
+                    }, actions: { delbutton:true, editbutton: true, keys: false}} },
+                    { name: 'Id', index: 'Id', sorttype: "int", width: 80},
+                    { name: 'MachineName', index: 'MachineName', width:140},
+                    { name: 'Name', index: 'Name', width: 140, editable:true},
+                    { name: 'IPAddress', index: 'IPAddress', width: 100},
+                    { name: 'Active', index: 'Active', width: 80, editable:true, edittype: 'checkbox'}
+                ],
+                jsonReader: {id: "0", root: "rows", total: "total", page: "page", records: "records", userdata: "userdata"},
+                multiselect: true,
+                caption: "Sources",
+                autowidth: false,
+                rowNum: 25,
+                height: '100%',
+                width: $("#tablediv").width(),
+                shrinkToFit: true,
+                pager: '#sourcePager',
+                gridComplete: function () { 
+                    $("#tablediv").css('height', ($("#gbox_sourceTable").height() + 100 ) + "px"); 
+                    paging = false;
+                }, 
+                onPaging: function (e) { 
+                    if (e == "next_sourcePager") { 
+                        PageCnter++; 
+                        paging = true; 
+                    }
+                    if (e == "prev_sourcePager") { 
+                        PageCnter--; 
+                        paging = true; 
+                    }
+
+                    $("#sourceTable").jqGrid('setGridParam', 
+                        {datatype: 'json', PageCnter}).trigger('reloadGrid'); 
+                }, 
+                postData: { 
+                    PageCnt: function () { 
+                        return PageCnter; 
+                    },
+                    Pageing: function () { 
+                        return paging;
+                    }
+                }
+            });
+
+
+        },
+        load: function(data) {
+
+            if (data !=null) {
+                for (var i=0; i<=data.length;i++)
+                    $("#sourceTable").jqGrid('addRowData', i+1, data[i]);
+            }
+
+            $("#tablediv").css('height', ($("#gbox_sourceTable").height() + 100 ) + "px")
+        }
+
+    };
+
+</script>

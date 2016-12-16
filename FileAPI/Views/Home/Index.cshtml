@@ -1,0 +1,168 @@
+﻿@Model MCS.Models.IndexViewModel
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h2 style="position:absolute;">File API</h2>
+    <div style="top:80px; position:relative; width:90%;">
+        <div style="position:relative; float:right; top:-55px;">
+            <input class="import-selector" style="width:500px;" />
+        </div>
+        
+    </div>
+    <div id="tablediv" style="width:90%; position:relative; top:80px;">
+        
+        <table id="importTable"></table>
+        <div id="importPager"></div> 
+    </div>
+</div>
+
+<div class="row">
+
+</div>
+
+
+<link href="http://cdn.wijmo.com/themes/arctic/jquery-wijmo.css" rel="stylesheet" type="text/css" />
+
+
+<!--Wijmo Widgets CSS-->
+<link href="http://cdn.wijmo.com/jquery.wijmo-pro.all.3.20141.34.min.css" rel="stylesheet" type="text/css" />
+<link href="~/Content/ui.jqgrid.css" rel="stylesheet" type="text/css" />
+
+<script src="http://code.jquery.com/jquery-1.11.1.min.js" type="text/javascript"></script>
+<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.min.js" type="text/javascript"></script>
+<script src="~/Scripts/grid.locale-en.js" type="text/javascript"></script>
+@*<script src="~/Scripts/jquery.jqGrid.min.js" type="text/javascript"></script>*@
+<style>
+    .ui-jqgrid .ui-jqgrid-htable th div {
+        overflow: hidden;
+        position: relative;
+        height: 37px;
+        margin-top: 10px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+</style>
+
+<script type="text/javascript">
+    var PageCnter = 1; 
+    var paging = false; 
+    var selectedSource = "ALL"; 
+    var Filtering = false; 
+    $(function () {
+        var Data = @Html.Raw(Json.Encode(Model.sources));
+        console.log(Data);
+        mcs.InitJsonLoader();
+
+        $(".import-selector").select2({
+            data: Data, 
+            minimumResultsForSearch: -1,
+            initSelection : function (element, callback) {
+                var data = {id: 0, text: "ALL"};
+                callback(data);
+            }
+        });
+
+        $('.import-selector').on('change', function (evt) {
+            selectedSource = evt.added.text; 
+            console.log(evt.added.text); 
+            Filtering = true; 
+            $("#importTable").jqGrid('setGridParam', 
+                        {datatype: 'json', PageCnter}).trigger('reloadGrid'); 
+        });
+        //mcs.load(Data);
+
+    });
+
+    var mcs = {
+        Init: function () {
+
+            $("#importTable").jqGrid({
+                datatype: "local",
+                colNames: ["id", "LineBlob", "Source", "DocNumber", "Location", "Timestamp"],
+                colModel: [
+                    { name: 'id', index: 'id', sorttype: "int", width: 80},
+                    { name: 'LineBlob', index: 'LineBlob', width:700},
+                    { name: 'Source', index: 'Source', width: 100},
+                    { name: 'DocNumber', index: 'DocNumber', width: 100},
+                    { name: 'Location', index: 'Location', width: 180},
+                    { name: 'Timestamp', index: 'Timestamp', width:80, formatter: 'date', formatoptions: {srcformat: 'ISO8601Long', newformat: 'm/d/y H:i A'} }
+                ],
+                multiselect: true,
+                caption: "Import data",
+                autowidth: false,
+                height: '100%',
+                width: $("#tablediv").width(),
+                shrinkToFit: true,
+                pager: '#importPager'
+            });
+        }, 
+        InitJsonLoader() { 
+            $("#importTable").jqGrid({
+                datatype: "json", 
+                url: "/Home/getImports", 
+                colNames: ["id", "LineBlob", "Source", "DocNumber", "Location", "Timestamp"],
+                colModel: [
+                    { name: 'id', index: 'id', sorttype: "int", width: 80},
+                    { name: 'LineBlob', index: 'LineBlob', width:700},
+                    { name: 'Source', index: 'Source', width: 100},
+                    { name: 'DocNumber', index: 'DocNumber', width: 100},
+                    { name: 'Location', index: 'Location', width: 180},
+                    { name: 'Timestamp', index: 'Timestamp', width:80, formatter: 'date', formatoptions: {srcformat: 'ISO8601Long', newformat: 'm/d/y H:i A'} }
+                ],
+                jsonReader: {id: "0", root: "rows", total: "total", page: "page", records: "records", userdata: "userdata" }, 
+                multiselect: true, 
+                caption: "Import data from Sources", 
+                autowidth: false, 
+                rowNum: 250, 
+                height: '100%', 
+                width: $("#tablediv").width(), 
+                shrinkToFit: true, 
+                pager: '#importPager',
+                gridComplete: function () { 
+                    $("#tablediv").css('height', ($("#gbox_importTable").height() + 100 ) + "px");
+                    paging = false; 
+                    Filtering = false; 
+                }, 
+                onPaging: function (e) { 
+                    if (e == "next_importPager") { 
+                        PageCnter++; 
+                    }
+                    if (e == "prev_importPager") { 
+                        PageCnter--; 
+                    }
+                    paging = true;
+                    $("#importTable").jqGrid('setGridParam', 
+                        {datatype: 'json', PageCnter}).trigger('reloadGrid'); 
+                }, 
+                postData: { 
+                    PageCnt: function () { 
+                        return PageCnter; 
+                    }, 
+                    paging: function () { 
+                        return paging;
+                    }, 
+                    Filter1: function () { 
+                        return selectedSource;
+                    }, 
+                    FilterFlag: function () { 
+                        return Filtering; 
+                    }
+                }
+            });
+
+        },
+        load: function(data) { 
+
+            if (data !=null) { 
+                for (var i=0; i<=data.length;i++)
+                    $("#importTable").jqGrid('addRowData', i+1, data[i]);
+            }
+
+            $("#tablediv").css('height', ($("#gbox_importTable").height() + 100 ) + "px")
+        }
+
+    };
+
+</script>
