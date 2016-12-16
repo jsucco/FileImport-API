@@ -1,0 +1,16 @@
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\CopyToAPI.exe.config
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.csprojResolveAssemblyReference.cache
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.Form1.resources
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.Properties.Resources.resources
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.csproj.GenerateResource.Cache
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\CopyToAPI.exe
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\CopyToAPI.pdb
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\System.Net.Http.Formatting.dll
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.exe
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.pdb
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\Newtonsoft.Json.dll
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\Newtonsoft.Json.xml
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\CopyToAPI.exe.manifest
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\bin\Debug\CopyToAPI.application
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.exe.manifest
+C:\Users\johns\Dropbox (Standard Textile)\APR_Publish\CopyToAPI\CopyToAPI\obj\Debug\CopyToAPI.application
